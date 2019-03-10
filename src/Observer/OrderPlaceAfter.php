@@ -38,12 +38,20 @@ class OrderPlaceAfter implements \Magento\Framework\Event\ObserverInterface {
      */
     private $orderFieldFactory;
 
+    /**
+     *
+     * @var \Extroniks\CheckoutFields\Helper\Data
+     */
+    private $helper;
+
     public function __construct(
     \Magento\Checkout\Model\Session $checkoutSession,
-    \Extroniks\CheckoutFields\Model\Order\FieldFactory $orderFieldFactory
+    \Extroniks\CheckoutFields\Model\Order\FieldFactory $orderFieldFactory,
+    \Extroniks\CheckoutFields\Helper\Data $helper
     ) {
         $this->checkoutSession   = $checkoutSession;
         $this->orderFieldFactory = $orderFieldFactory;
+        $this->helper            = $helper;
     }
 
     private function filterValue($value) {
@@ -51,6 +59,10 @@ class OrderPlaceAfter implements \Magento\Framework\Event\ObserverInterface {
     }
 
     public function execute(\Magento\Framework\Event\Observer $observer) {
+        if (!$this->helper->isEnabled()) {
+            return $this;
+        }
+
         $order          = $observer->getEvent()->getOrder();
         $checkoutFields = $this->checkoutSession->getData('checkoutFields');
         $fields         = [];

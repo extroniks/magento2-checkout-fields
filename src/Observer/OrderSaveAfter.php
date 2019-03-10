@@ -39,19 +39,31 @@ class OrderSaveAfter implements \Magento\Framework\Event\ObserverInterface {
 
     /**
      *
+     * @var \Extroniks\CheckoutFields\Helper\Data
+     */
+    private $helper;
+
+    /**
+     *
      * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
     public function __construct(
     \Extroniks\CheckoutFields\Model\Order\FieldRepository $orderfieldRepository,
+    \Extroniks\CheckoutFields\Helper\Data $helper,
     \Psr\Log\LoggerInterface $logger
     ) {
         $this->orderFieldRepository = $orderfieldRepository;
+        $this->helper               = $helper;
         $this->logger               = $logger;
     }
 
     public function execute(\Magento\Framework\Event\Observer $observer) {
+        if (!$this->helper->isEnabled()) {
+            return $this;
+        }
+
         $order = $observer->getEvent()->getOrder();
 
         if ($order->getCheckoutFields()) {

@@ -54,6 +54,10 @@ class ShippingInformationManagementPlugin {
     $result, $cartId,
     \Magento\Checkout\Api\Data\ShippingInformationInterface $addressInformation
     ) {
+        if (!$this->helper->isEnabled()) {
+            return $result;
+        }
+
         $checkoutFields = $addressInformation->getExtensionAttributes()->getCheckoutFields();
         $fieldsConfig   = $this->helper->getCheckoutFields();
         $data           = [];

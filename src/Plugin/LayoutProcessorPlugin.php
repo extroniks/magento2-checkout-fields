@@ -43,11 +43,14 @@ class LayoutProcessorPlugin {
     public function afterProcess(
     \Magento\Checkout\Block\Checkout\LayoutProcessor $subject, $jsLayout
     ) {
+        if (!$this->helper->isEnabled()) {
+            return $jsLayout;
+        }
         $shippingConfiguration = &$jsLayout['components']['checkout']['children']['steps']['children']['shipping-step']
                 ['children']['shippingAddress']['children'];
 
         $areas = [
-            FrontendArea::AREA_BEFORE_SHIPPING_FORM        => &$shippingConfiguration['before-fields']['children'],
+            FrontendArea::AREA_BEFORE_SHIPPING_FORM        => &$shippingConfiguration['before-form']['children'],
             FrontendArea::AREA_BEFORE_SHIPPING_METHOD_FORM => &$shippingConfiguration['before-shipping-method-form']['children']
         ];
 
@@ -62,7 +65,9 @@ class LayoutProcessorPlugin {
                     'deps'              => 'checkoutProvider',
                     'template'          => 'ui/form/field',
                     'elementTmpl'       => $field['element_input_type'],
-                    'additionalClasses' => 'checkoutField'
+                    'additionalClasses' => 'checkoutField',
+                    'cols'              => 15, // fixes Knockout JS issue in checkout
+                    'rows'              => 2, // fixes Knockout JS issue in checkout
                 ],
                 'provider'  => 'checkoutProvider',
                 'dataScope' => 'checkoutFields.' . $fieldId,

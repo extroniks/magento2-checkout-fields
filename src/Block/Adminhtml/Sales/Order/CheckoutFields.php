@@ -39,18 +39,18 @@ class CheckoutFields extends \Magento\Framework\View\Element\Template {
 
     /**
      *
-     * @var \Extroniks\CheckoutFields\Model\ResourceModel\Order\Field\CollectionFactory
+     * @var \Extroniks\CheckoutFields\Helper\Data
      */
-    private $collectionFactory;
+    private $helper;
 
     public function __construct(
     \Magento\Framework\Registry $coreRegistry,
-    \Extroniks\CheckoutFields\Model\ResourceModel\Order\Field\CollectionFactory $collectionFactory,
+    \Extroniks\CheckoutFields\Helper\Data $helper,
     \Magento\Framework\View\Element\Template\Context $context, $data = []
     ) {
         parent::__construct($context, $data);
-        $this->coreRegistry      = $coreRegistry;
-        $this->collectionFactory = $collectionFactory;
+        $this->coreRegistry = $coreRegistry;
+        $this->helper       = $helper;
     }
 
     /**
@@ -63,11 +63,7 @@ class CheckoutFields extends \Magento\Framework\View\Element\Template {
     }
 
     public function getCheckoutFields() {
-        $collection = $this->collectionFactory->create();
-        $collection->addFieldToSelect('*')
-                ->addFieldToFilter('order_id', ['eq' => $this->getOrder()->getId()])
-                ->load();
-        return $collection->getItems();
+        return $this->helper->getOrderCheckoutFields($this->getOrder());
     }
 
 }

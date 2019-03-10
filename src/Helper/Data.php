@@ -29,6 +29,20 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
     const XML_CONFIG_PATH_ENABLED = 'checkoutfields/general/enabled';
     const XML_CONFIG_PATH_FIELDS  = 'checkoutfields/general/fields';
 
+    /**
+     *
+     * @var \Extroniks\CheckoutFields\Model\ResourceModel\Order\Field\CollectionFactory
+     */
+    private $collectionFactory;
+
+    public function __construct(
+    \Magento\Framework\App\Helper\Context $context,
+    \Extroniks\CheckoutFields\Model\ResourceModel\Order\Field\CollectionFactory $collectionFactory
+    ) {
+        parent::__construct($context);
+        $this->collectionFactory = $collectionFactory;
+    }
+
     public function isEnabled() {
         return ($this->scopeConfig->getValue(self::XML_CONFIG_PATH_ENABLED) == 1);
     }
@@ -39,6 +53,14 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
 
     public function getCheckoutFields() {
         return $this->getFieldsConfig() ? unserialize($this->getFieldsConfig()) : [];
+    }
+
+    public function getOrderCheckoutFields(\Magento\Sales\Model\Order $order) {
+        $collection = $this->collectionFactory->create();
+        $collection->addFieldToSelect('*')
+                ->addFieldToFilter('order_id', ['eq' => $order->getId()])
+                ->load();
+        return $collection->getItems();
     }
 
 }

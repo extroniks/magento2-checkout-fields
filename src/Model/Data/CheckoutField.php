@@ -1,4 +1,4 @@
-<?php namespace Extroniks\CheckoutFields\Helper;
+<?php namespace Extroniks\CheckoutFields\Model\Data;
 
 /*
  * The MIT License
@@ -24,21 +24,53 @@
  * THE SOFTWARE.
  */
 
-class Data extends \Magento\Framework\App\Helper\AbstractHelper {
+class CheckoutField {
 
-    const XML_CONFIG_PATH_ENABLED = 'checkoutfields/general/enabled';
-    const XML_CONFIG_PATH_FIELDS  = 'checkoutfields/general/fields';
+    /**
+     *
+     * @var string
+     */
+    private $id;
 
-    public function isEnabled() {
-        return ($this->scopeConfig->getValue(self::XML_CONFIG_PATH_ENABLED) == 1);
+    /**
+     *
+     * @var string
+     */
+    private $value;
+
+    /**
+     * @return string
+     */
+    public function getId() {
+        return $this->id;
     }
 
-    public function getFieldsConfig() {
-        return $this->scopeConfig->getValue(self::XML_CONFIG_PATH_FIELDS);
+    /**
+     *
+     * @param type $id
+     * @return $this
+     */
+    public function setId($id) {
+        $this->id = $id;
+        return $this;
     }
 
-    public function getCheckoutFields() {
-        return $this->getFieldsConfig() ? unserialize($this->getFieldsConfig()) : [];
+    /**
+     *
+     * @return string
+     */
+    public function getValue() {
+        return $this->value;
+    }
+
+    /**
+     *
+     * @param type $value
+     * @return $this
+     */
+    public function setValue($value) {
+        $this->value = $value;
+        return $this;
     }
 
 }

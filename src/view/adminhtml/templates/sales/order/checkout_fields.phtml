@@ -1,0 +1,16 @@
+<?php $checkoutFields = $block->getCheckoutFields(); ?>
+<?php if (count($checkoutFields)): ?>
+    <section class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title"><?= __('Checkout Fields'); ?></span>
+        </div>
+        <div class="admin__page-section-content">
+            <?php foreach ($checkoutFields as $field): ?>
+                <div>
+                    <p><?= $field->getLabel(); ?></p>
+                    <p><?= $field->getValue(); ?></p>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </section>
+<?php endif; ?>

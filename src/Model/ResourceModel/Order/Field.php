@@ -1,4 +1,4 @@
-<?php namespace Extroniks\CheckoutFields\Helper;
+<?php namespace Extroniks\CheckoutFields\Model\ResourceModel\Order;
 
 /*
  * The MIT License
@@ -24,21 +24,10 @@
  * THE SOFTWARE.
  */
 
-class Data extends \Magento\Framework\App\Helper\AbstractHelper {
+class Field extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb {
 
-    const XML_CONFIG_PATH_ENABLED = 'checkoutfields/general/enabled';
-    const XML_CONFIG_PATH_FIELDS  = 'checkoutfields/general/fields';
-
-    public function isEnabled() {
-        return ($this->scopeConfig->getValue(self::XML_CONFIG_PATH_ENABLED) == 1);
-    }
-
-    public function getFieldsConfig() {
-        return $this->scopeConfig->getValue(self::XML_CONFIG_PATH_FIELDS);
-    }
-
-    public function getCheckoutFields() {
-        return $this->getFieldsConfig() ? unserialize($this->getFieldsConfig()) : [];
+    protected function _construct() {
+        $this->_init('checkoutfields_order_field', 'value_id');
     }
 
 }

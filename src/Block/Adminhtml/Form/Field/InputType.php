@@ -1,4 +1,4 @@
-<?php namespace Extroniks\CheckoutFields\Helper;
+<?php namespace Extroniks\CheckoutFields\Block\Adminhtml\Form\Field;
 
 /*
  * The MIT License
@@ -24,21 +24,35 @@
  * THE SOFTWARE.
  */
 
-class Data extends \Magento\Framework\App\Helper\AbstractHelper {
+class InputType extends \Magento\Framework\View\Element\Html\Select {
 
-    const XML_CONFIG_PATH_ENABLED = 'checkoutfields/general/enabled';
-    const XML_CONFIG_PATH_FIELDS  = 'checkoutfields/general/fields';
-
-    public function isEnabled() {
-        return ($this->scopeConfig->getValue(self::XML_CONFIG_PATH_ENABLED) == 1);
+    /**
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function setInputName($value) {
+        return $this->setName($value);
     }
 
-    public function getFieldsConfig() {
-        return $this->scopeConfig->getValue(self::XML_CONFIG_PATH_FIELDS);
-    }
+    /**
+     * Render block HTML.
+     *
+     * @return string
+     */
+    public function _toHtml() {
+        $typeOptions = [
+            'ui/form/element/textarea' => 'textarea',
+            'ui/form/element/input' => 'text'
+        ];
 
-    public function getCheckoutFields() {
-        return $this->getFieldsConfig() ? unserialize($this->getFieldsConfig()) : [];
+        if (!$this->getOptions()) {
+            foreach ($typeOptions as $key => $value) {
+                $this->addOption($key, addslashes($value));
+            }
+        }
+
+        return parent::_toHtml();
     }
 
 }

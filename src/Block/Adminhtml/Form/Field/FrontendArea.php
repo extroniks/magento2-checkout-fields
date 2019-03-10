@@ -1,4 +1,4 @@
-<?php namespace Extroniks\CheckoutFields\Helper;
+<?php namespace Extroniks\CheckoutFields\Block\Adminhtml\Form\Field;
 
 /*
  * The MIT License
@@ -24,21 +24,38 @@
  * THE SOFTWARE.
  */
 
-class Data extends \Magento\Framework\App\Helper\AbstractHelper {
+class FrontendArea extends \Magento\Framework\View\Element\Html\Select {
 
-    const XML_CONFIG_PATH_ENABLED = 'checkoutfields/general/enabled';
-    const XML_CONFIG_PATH_FIELDS  = 'checkoutfields/general/fields';
+    const AREA_BEFORE_SHIPPING_FORM        = 'beforeShippingForm';
+    const AREA_BEFORE_SHIPPING_METHOD_FORM = 'beforeShippingMethodForm';
 
-    public function isEnabled() {
-        return ($this->scopeConfig->getValue(self::XML_CONFIG_PATH_ENABLED) == 1);
+    /**
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function setInputName($value) {
+        return $this->setName($value);
     }
 
-    public function getFieldsConfig() {
-        return $this->scopeConfig->getValue(self::XML_CONFIG_PATH_FIELDS);
-    }
+    /**
+     * Render block HTML.
+     *
+     * @return string
+     */
+    public function _toHtml() {
+        $typeOptions = [
+            self::AREA_BEFORE_SHIPPING_FORM        => 'Before Shipping Form',
+            self::AREA_BEFORE_SHIPPING_METHOD_FORM => 'Before Shipping Method Form'
+        ];
 
-    public function getCheckoutFields() {
-        return $this->getFieldsConfig() ? unserialize($this->getFieldsConfig()) : [];
+        if (!$this->getOptions()) {
+            foreach ($typeOptions as $key => $value) {
+                $this->addOption($key, addslashes($value));
+            }
+        }
+
+        return parent::_toHtml();
     }
 
 }
